@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="An interactive, browser-based social network diffusion simulation." />
+    <title>Rumor Engine — Network Diffusion Lab</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="masthead">
+        <div>
+          <p class="eyebrow">NETWORK DIFFUSION LAB / 01</p>
+          <h1>Rumor Engine</h1>
+        </div>
+        <p class="model-note">An illustrative discrete-step model. It does not predict real-world outcomes.</p>
+      </header>
+
+      <section class="experiment-bar" aria-label="Experiment presets">
+        <div class="preset-label"><span class="signal-dot"></span> Experiments</div>
+        <div class="preset-buttons" role="group" aria-label="Choose an experiment">
+          <button class="preset active" data-preset="spark">The Spark<span>fast spread</span></button>
+          <button class="preset" data-preset="skeptics">The Skeptics<span>resistant network</span></button>
+          <button class="preset" data-preset="influencers">The Influencers<span>hub-driven</span></button>
+        </div>
+      </section>
+
+      <section class="lab-grid">
+        <aside class="control-panel" aria-label="Simulation controls">
+          <div class="panel-heading">
+            <p class="eyebrow">CONTROL SURFACE</p>
+            <span id="run-status" class="status" data-running="false">Paused</span>
+          </div>
+
+          <div class="control-actions">
+            <button id="start-button" class="button primary">Start</button>
+            <button id="pause-button" class="button">Pause</button>
+            <button id="step-button" class="button">Step</button>
+            <button id="reset-button" class="button quiet">Reset</button>
+          </div>
+
+          <div class="parameter-group">
+            <label for="network-size">Network size <output id="network-size-output">100</output></label>
+            <input id="network-size" type="range" min="30" max="180" step="5" value="100" />
+          </div>
+          <div class="parameter-group">
+            <label for="sharing-probability">Base sharing <output id="sharing-probability-output">78%</output></label>
+            <input id="sharing-probability" type="range" min="5" max="95" step="1" value="78" />
+          </div>
+          <div class="parameter-group">
+            <label for="skepticism">Base skepticism <output id="skepticism-output">14%</output></label>
+            <input id="skepticism" type="range" min="5" max="90" step="1" value="14" />
+          </div>
+          <div class="parameter-group seed-field">
+            <label for="seed">Random seed</label>
+            <input id="seed" type="number" inputmode="numeric" min="1" max="999999" value="24017" />
+          </div>
+
+          <div class="seed-actions">
+            <button id="random-source-button" class="text-button">Choose random source</button>
+            <span id="source-label">Source: person —</span>
+          </div>
+
+          <div class="rules">
+            <p class="eyebrow">MODEL RULES</p>
+            <p>At each step, informed people attempt to share. A recipient accepts based on the sender’s reach and their own trust and skepticism. Rejected recipients become skeptical.</p>
+          </div>
+        </aside>
+
+        <section class="network-section" aria-label="Network visualization">
+          <div class="visualization-heading">
+            <div>
+              <p class="eyebrow">LIVE NETWORK</p>
+              <h2>Communication graph</h2>
+            </div>
+            <p id="network-hint">Click a node to select the source.</p>
+          </div>
+          <div id="canvas-wrap" class="canvas-wrap">
+            <canvas id="network-canvas" aria-label="Interactive network canvas. Click an uninformed node to select it as the rumor source."></canvas>
+            <div id="node-tooltip" class="node-tooltip" hidden></div>
+          </div>
+          <div class="legend" aria-label="Network legend">
+            <span><i class="key-line"></i> connection</span>
+            <span><i class="key-node uninformed"></i> uninformed</span>
+            <span><i class="key-node informed"></i> informed</span>
+            <span><i class="key-node skeptical"></i> skeptical</span>
+          </div>
+        </section>
+
+        <aside class="readout-panel" aria-label="Simulation readout">
+          <div class="panel-heading">
+            <p class="eyebrow">LIVE READOUT</p>
+            <span id="step-readout" class="mono">STEP 00</span>
+          </div>
+          <div class="stat-grid">
+            <div class="stat informed-stat"><span>Informed</span><strong id="informed-count">0</strong><small id="informed-percent">0% of network</small></div>
+            <div class="stat"><span>Uninformed</span><strong id="uninformed-count">0</strong><small>not yet exposed</small></div>
+            <div class="stat"><span>Skeptical</span><strong id="skeptical-count">0</strong><small>declined rumor</small></div>
+            <div class="stat"><span>Connections</span><strong id="connection-count">0</strong><small>communication paths</small></div>
+          </div>
+
+          <div class="spread-meter" aria-label="Rumor spread progress">
+            <div class="meter-label"><span>Network reached</span><strong id="meter-percent">0%</strong></div>
+            <div class="meter-track"><div id="meter-fill" class="meter-fill"></div></div>
+          </div>
+
+          <div class="event-log-wrap">
+            <div class="log-heading"><p class="eyebrow">EVENT LOG</p><span class="mono">LATEST</span></div>
+            <ol id="event-log" class="event-log" aria-live="polite"></ol>
+          </div>
+        </aside>
+      </section>
+
+      <footer>
+        <span>Discrete state update · deterministic seed · browser local</span>
+        <span>Rumor Engine v1.0</span>
+      </footer>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>
